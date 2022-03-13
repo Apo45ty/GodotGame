@@ -2,7 +2,7 @@
 
 [sub_resource type="BoxShape" id=1]
 
-[node name="Spatial" type="StaticBody"]
+[node name="Spatial" type="StaticBody" groups=["Playable"]]
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.316723, 0.850376, 0 )

@@ -2,8 +2,8 @@ extends TextureProgress
 
 
 func _ready():
-	max_value = 500
+	max_value = $"..".getPlayerMaxHealthPoints()
 
 # Called when the node enters the scene tree for the first time.
 func _physics_process(delta):
-	value = $"../Player".getPlayerHealthPoints()
+	value = $"..".getPlayerHealthPoints()
