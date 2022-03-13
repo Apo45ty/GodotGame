@@ -7,12 +7,11 @@ const JumpSpeed = 200
 const UP = Vector3(0,1,0)
 const gravity = -100
 const sensitivity = 0.01
-const HPTOSCALE = 0.1 # 1 hp equals 0.1 scale
 var blobArray = [player]
 var currentBlobIndex = 0
 
 func _ready():
-	player = $Player
+	player = $"Player"
 	blobArray = [player]
 	
 func getPlayerHealthPoints():
@@ -22,18 +21,38 @@ func _physics_process(delta):
 	move(delta)
 	animate()
 
+func previousBlob():
+	currentBlobIndex=(currentBlobIndex-1)%blobArray.size()
+	getBlob()
+
 func nextBlob():
-	print(currentBlobIndex)
 	currentBlobIndex=(1+currentBlobIndex)%blobArray.size()
+	getBlob()
+	
+func getBlob():
 	var newBlob = blobArray[currentBlobIndex]
-	translate(newBlob.to_global(Vector3.ZERO))
+	newBlob.removeCollider()
+	var Time = 5.0
+	var Destination = newBlob.translation
+	#	if abs((translation-Destination).length()) > 0.1:
+#		var tween = get_node("Tween")
+#		tween.interpolate_property($".","translation",
+#			translation,
+#			Destination,
+#			Time,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
+#		tween.start()
 	player.set_as_toplevel(true)
+	if blobArray.size()>1:
+		player.addCollider()
 	player=newBlob
+	translation = player.translation
 	player.set_as_toplevel(false)
 	add_child(newBlob)
-	newBlob.translate(Vector3.ZERO)
+	
 
 func split():
+	if player.healthPoints <= 1 ||not is_on_floor():
+		return
 	player.healthPoints=player.healthPoints/2
 	var clone = load("res://Characters/Player.tscn").instance()
 	add_child(clone)
@@ -42,7 +61,8 @@ func split():
 	clone.set_as_toplevel(true)
 	clone.global_transform = $SplitLocation.global_transform
 	var character_forward = global_transform.basis[2].normalized()
-
+	clone.addCollider()
+	
 func move(delta):
 	var movement_dir = get_2d_movement_dir()
 	var dirrection_to_cam = Vector3.ZERO
@@ -74,7 +94,7 @@ func animate():
 		pass
 
 func _input(event):
-	if event is InputEventMouse:
+	if event is InputEventMouseMotion:
 		if event.relative :
 			rotation = h_camera_rotation(-event.relative.x*sensitivity)
 			$Camera.rotation = v_camera_rotation(-event.relative.y*sensitivity)
@@ -84,10 +104,13 @@ func _input(event):
 		player.healthPoints += 10
 	if Input.is_action_just_pressed("lowerHP"):
 		player.healthPoints -= 10
-	if Input.is_key_pressed(KEY_K):
-		print(blobArray)
-	if Input.is_action_just_pressed("nextBlob"):
-		nextBlob()
+#	if Input.is_key_pressed(KEY_K):
+#		print(blobArray)
+	if is_on_floor():
+		if Input.is_action_just_pressed("nextBlob"):
+			nextBlob()
+		if Input.is_action_just_pressed("previousBlob"):
+			previousBlob()
 		
 func h_camera_rotation(camera_rotation):
 	return rotation + Vector3(0,camera_rotation,0)
