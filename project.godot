@@ -11,8 +11,13 @@ config_version=4
 [application]
 
 config/name="GoDotGameEngineCombine"
-run/main_scene="res://Levels/Level1.tscn"
+run/main_scene="res://Levels/StartScreen.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Main="*res://main.gd"
+ControlSettings="*res://settings.gd"
 
 [display]
 

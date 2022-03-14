@@ -1,39 +1,31 @@
 extends KinematicBody
-
+#jumping
 const ISINJUMP = 0
 const ISNOTINJUMP = 1
-const GravityReducer = 2
-const JumpMovementReducer = 2
 var jumpState = ISNOTINJUMP
-
-
+#player initialization
 onready var player = $Player
-const initialHealthPoints = 120
+#movement
 var motion = Vector3()
-const Speed = 10
-const JumpSpeed = 500
-const UP = Vector3(0,1,0)
-const gravity = -500
-const sensitivity = 0.01
-const JoystickSensetivityHorizontal = 0.12
-const JoystickSensetivityVertical = 0.05
+var UP = Vector3(0,1,0)
+#joining
 const RAY_LENGTH = 100000
-var JumpPointsGainedPerHealthPointLoss = 25000
-const SpeedPointsGainedPerHealthPointLoss = 50
+
+#Blobarray
 var blobArray = [player]
 var currentBlobIndex = 0
-
+#settings cache
+onready var settings = get_node("/root/ControlSettings")
+onready var main =  get_node("/root/Main")
 func _ready():
 #	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	player = $"Player"
 	blobArray = [player]
-	player.healthPoints = initialHealthPoints
-
 
 func getPlayerMaxHealthPoints():
 	if player == null :
 		return 500
-	return player.MaxHealthPoints
+	return main.MaxHealthPoints
 	
 func getPlayerHealthPoints():
 	return player.healthPoints
@@ -48,14 +40,6 @@ func _physics_process(delta):
 		join()
 	if Input.is_action_just_released("split"):
 		split()
-	if Input.is_action_just_released("raiseHP"):
-		print(JumpPointsGainedPerHealthPointLoss)
-		JumpPointsGainedPerHealthPointLoss += 100
-	if Input.is_action_just_released("lowerHP"):
-		print(JumpPointsGainedPerHealthPointLoss)
-		JumpPointsGainedPerHealthPointLoss -= 100
-#	if Input.is_key_pressed(KEY_K):
-#		print(blobArray)
 	if rayCastIsColliding() :#is_on_floor()
 		if Input.is_action_just_released("nextBlob"):
 			nextBlob()
@@ -63,8 +47,8 @@ func _physics_process(delta):
 			previousBlob()
 	var hAxis = Input.get_action_strength("look_left")-Input.get_action_strength("look_right")
 	var vAxis = Input.get_action_strength("look_up")-Input.get_action_strength("look_down")
-	rotation = h_camera_rotation(hAxis*JoystickSensetivityHorizontal)
-	$Camera.rotation = v_camera_rotation(vAxis*JoystickSensetivityVertical)	
+	rotation = h_camera_rotation(hAxis*settings.JoystickSensetivityHorizontal)
+	$Camera.rotation = v_camera_rotation(vAxis*settings.JoystickSensetivityVertical)	
 	
 	
 func checkBoundaries():
@@ -116,31 +100,33 @@ func split():
 	clone.addCollider()
 	
 func move(delta):
+	if $"../CanvasLayer/Tutorial" and not $"../CanvasLayer/Tutorial".done:
+		return
 	var movement_dir = get_2d_movement_dir()
 	var dirrection_to_cam = Vector3.ZERO
 	var camera_xform = $Camera.global_transform
 	dirrection_to_cam -= camera_xform.basis.z.normalized()*movement_dir.x
 	dirrection_to_cam -= camera_xform.basis.x.normalized()*movement_dir.y
-	motion = dirrection_to_cam*(Speed+(1/player.healthPoints)*SpeedPointsGainedPerHealthPointLoss)
+	motion = dirrection_to_cam*(main.Speed+(1/player.healthPoints)*main.SpeedPointsGainedPerHealthPointLoss)
 	if(jumpState==ISINJUMP and rayCastIsColliding()):
 		jumpState=ISNOTINJUMP
 	var y = 0
 	if Input.is_action_just_pressed("jump") and rayCastIsColliding() :#and is_on_floor()
-		 y = JumpSpeed+(1/float(player.healthPoints))*float(JumpPointsGainedPerHealthPointLoss)
+		 y = main.JumpSpeed+(1/float(player.healthPoints))*float(main.JumpPointsGainedPerHealthPointLoss)
 		 print(y)
 		 jumpState=ISINJUMP
 	motion.y=y
 	#add gravity
 	if not rayCastIsColliding():
 #		print("falling")
-		motion.x/=JumpMovementReducer
-		motion.z/=JumpMovementReducer
+		motion.x/=main.JumpMovementReducer
+		motion.z/=main.JumpMovementReducer
 		if jumpState==ISINJUMP and not Input.is_action_pressed("fast_fall"):
 #			print("ISINJUMP")
-			motion.y+=(gravity/GravityReducer) * delta
+			motion.y+=(main.gravity/main.GravityReducer) * delta
 		elif jumpState==ISNOTINJUMP || Input.is_action_pressed("fast_fall"):
-			motion.y+=gravity * delta
-	print(motion)
+			motion.y+=main.gravity * delta
+#	print(motion)
 	move_and_slide(motion,UP)
 	
 	
@@ -162,8 +148,8 @@ func animate():
 func _input(event):
 	if event is InputEventMouseMotion :
 		if event.relative :
-			rotation = h_camera_rotation(-event.relative.x*sensitivity)
-			$Camera.rotation = v_camera_rotation(-event.relative.y*sensitivity)
+			rotation = h_camera_rotation(-event.relative.x*settings.sensitivity)
+			$Camera.rotation = v_camera_rotation(-event.relative.y*settings.sensitivity)
 	
 	
 

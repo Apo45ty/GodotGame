@@ -1,14 +1,14 @@
 extends Spatial
 
-var MaxHealthPoints = 500
-const HPTOSCALE = 0.01 # 1 hp equals 0.1 scale
+onready var main =  get_node("/root/Main")
 var healthPoints = 100
 
 func addHealthPoint(points):
-	healthPoints = min(healthPoints+points,MaxHealthPoints)
+	healthPoints = min(healthPoints+points,main.MaxHealthPoints)
 
 func _physics_process(delta):
-	scale=Vector3(HPTOSCALE*healthPoints,HPTOSCALE*healthPoints,HPTOSCALE*healthPoints)
+	scale=Vector3(main.HPTOSCALE*healthPoints,main.HPTOSCALE*healthPoints,\
+	main.HPTOSCALE*healthPoints)
 
 func addCollider():
 	var collision = load("res://Characters/Player_Static.tscn").instance()

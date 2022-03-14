@@ -22,7 +22,7 @@ data = {
 image = SubResource( 3 )
 size = Vector2( 64, 64 )
 
-[node name="PlayerScene" type="KinematicBody"]
+[node name="PlayerScene" type="KinematicBody" groups=["BlobController"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0298796 )
 script = ExtResource( 2 )
 

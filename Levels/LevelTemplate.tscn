@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Characters/BlobController.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenery/plane.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Levels/Goal.tscn" type="PackedScene" id=3]
+
+[node name="Game" type="Node"]
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0864563, 0, 0.0298796 )
+
+[node name="Level" type="Spatial" parent="." groups=["floor"]]
+
+[node name="Floor" parent="Level" instance=ExtResource( 2 )]
+transform = Transform( 0.982887, -0.184209, 0, 0.184209, 0.982887, 0, 0, 0, 1, 22.1236, 2.20496, -0.666457 )
+
+[node name="Floor2" parent="Level" instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.00534, 0.188332, -0.666457 )
+
+[node name="Floor3" parent="Level" instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 47.0076, 0.188332, -0.666457 )
+
+[node name="Floor4" parent="Level" instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 73.3721, 0.376664, -0.443121 )
+
+[node name="Floor5" parent="Level" instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 89.6274, 8.80985, -0.773576 )
+
+[node name="Spatial" parent="." instance=ExtResource( 3 )]
+transform = Transform( -4.51543e-07, 0, -7.7882, 0, 2.28918, 0, 10.3301, 0, -3.40433e-07, 89.9319, 10.4588, -0.64563 )
+
+[editable path="Player"]
+[editable path="Spatial"]

@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/startGameButton.png-bc4e32083da4dec48f120e1ec9dba7fd.image"
+
+[deps]
+
+source_file="res://startGameButton.png"
+dest_files=[ "res://.import/startGameButton.png-bc4e32083da4dec48f120e1ec9dba7fd.image" ]
+
+[params]
+
