@@ -247,8 +247,8 @@ margin_right = 708.0
 margin_bottom = 291.0
 custom_fonts/normal_font = SubResource( 4 )
 bbcode_enabled = true
-bbcode_text = "[shake rate=5 level=10]Aim the crosshair at other blobs to and press the left mouse button to join with other blobs. Alternatively press the left trigger to join with what ever blob you are aiming at. This will retore your health by the health of the blob.[/shake]"
-text = "Aim the crosshair at other blobs to and press the left mouse button to join with other blobs. Alternatively press the left trigger to join with what ever blob you are aiming at. This will retore your health by the health of the blob."
+bbcode_text = "[shake rate=5 level=10]Aim the crosshair at other blobs to and press the left mouse button to join with other blobs. Alternatively press the left trigger to join with what ever blob you are aiming at. This will restore your health by the health of the blob.[/shake]"
+text = "Aim the crosshair at other blobs to and press the left mouse button to join with other blobs. Alternatively press the left trigger to join with what ever blob you are aiming at. This will restore your health by the health of the blob."
 
 [node name="Label" type="Label" parent="join"]
 margin_left = 464.0
@@ -355,8 +355,8 @@ margin_right = 717.0
 margin_bottom = 320.0
 custom_fonts/normal_font = SubResource( 4 )
 bbcode_enabled = true
-bbcode_text = "[shake rate=5 level=10]Press the braket keys to switch control between blobs.Alternatively you can use the right and left arrow pad on you controller. Remember you can always divide and conquer. That is is you cant squash them...[/shake]"
-text = "Press the braket keys to switch control between blobs.Alternatively you can use the right and left arrow pad on you controller. Remember you can always divide and conquer. That is is you cant squash them..."
+bbcode_text = "[shake rate=5 level=10]Press the braket keys to switch control between blobs.Alternatively you can use the right and left arrow pad on you controller. Remember you can always divide and conquer. That is if you cant squash them...[/shake]"
+text = "Press the braket keys to switch control between blobs.Alternatively you can use the right and left arrow pad on you controller. Remember you can always divide and conquer. That is if you cant squash them..."
 
 [node name="Label" type="Label" parent="switchControl"]
 margin_left = 464.0

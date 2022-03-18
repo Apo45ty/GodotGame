@@ -1,5 +1,7 @@
 extends KinematicBody
 #jumping
+var yGlobalPos = 0
+var yCameraPos = 0
 const ISINJUMP = 0
 const ISNOTINJUMP = 1
 var jumpState = ISNOTINJUMP
@@ -10,7 +12,6 @@ var motion = Vector3()
 var UP = Vector3(0,1,0)
 #joining
 const RAY_LENGTH = 100000
-
 #Blobarray
 var blobArray = [player]
 var currentBlobIndex = 0
@@ -31,11 +32,12 @@ func getPlayerHealthPoints():
 	return player.healthPoints
 
 func _physics_process(delta):
+	$"CollisionShape".scale=player.scale
 	move(delta)
 	animate()
 	checkBoundaries()
 	if Input.is_action_just_released("menu"):
-		get_tree().quit()
+		$"CanvasLayer2/Menu".open()
 	if Input.is_action_just_released("join"):
 		join()
 	if Input.is_action_just_released("split"):
@@ -53,7 +55,10 @@ func _physics_process(delta):
 	
 func checkBoundaries():
 	if translation.y <-10:
-		translation = Vector3.ZERO
+		if not $"../Level/Spawn" == null:
+			translation = $"../Level".translation+$"../Level/Spawn".translation
+		else:
+			translation = Vector3.ZERO
 
 func previousBlob():
 	currentBlobIndex=(currentBlobIndex-1)%blobArray.size()
@@ -87,7 +92,7 @@ func getBlob():
 	
 
 func split():
-	if player.healthPoints <= 1 or not rayCastIsColliding():#or not is_on_floor()
+	if player.healthPoints <= main.MinHealthPointToSplit or not rayCastIsColliding():#or not is_on_floor()
 		return
 	player.healthPoints=player.healthPoints/2
 	var clone = load("res://Characters/Player.tscn").instance()
@@ -109,12 +114,20 @@ func move(delta):
 	dirrection_to_cam -= camera_xform.basis.x.normalized()*movement_dir.y
 	motion = dirrection_to_cam*(main.Speed+(1/player.healthPoints)*main.SpeedPointsGainedPerHealthPointLoss)
 	if(jumpState==ISINJUMP and rayCastIsColliding()):
+		$Camera.global_transform.origin.y = yCameraPos+(global_transform.origin.y-yGlobalPos)
 		jumpState=ISNOTINJUMP
+	elif jumpState == ISINJUMP:
+		$Camera.look_at(global_transform.origin,UP)
+		$Camera.global_transform.origin.y = yCameraPos
+	
 	var y = 0
 	if Input.is_action_just_pressed("jump") and rayCastIsColliding() :#and is_on_floor()
-		 y = main.JumpSpeed+(1/float(player.healthPoints))*float(main.JumpPointsGainedPerHealthPointLoss)
-		 print(y)
+		 y = main.JumpSpeed+min(1/float(player.healthPoints),main.maxJumpBoostPerHealthPoints)*float(main.JumpPointsGainedPerHealthPointLoss)
+#		 print(y)
 		 jumpState=ISINJUMP
+		 yGlobalPos = global_transform.origin.y
+		 yCameraPos=$Camera.global_transform.origin.y
+#		 print("=>"+str(yCameraPos))
 	motion.y=y
 	#add gravity
 	if not rayCastIsColliding():

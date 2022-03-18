@@ -3,6 +3,8 @@ extends Node
 #LevelInfo
 var currentLevel = 1
 #Bosts
+var MinHealthPointToSplit = 20
+var maxJumpBoostPerHealthPoints = 0.2
 var JumpPointsGainedPerHealthPointLoss = 25000
 var SpeedPointsGainedPerHealthPointLoss = 50
 var initialHealthPoints = 120
