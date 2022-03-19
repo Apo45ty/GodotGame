@@ -1,0 +1,1 @@
+This project is under the MIT license and is offered free of charge for you own projects.
